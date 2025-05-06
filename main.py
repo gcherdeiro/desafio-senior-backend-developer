@@ -2,8 +2,8 @@ from typing import Annotated
 from fastapi import Depends, FastAPI, HTTPException, status
 from sqlalchemy import create_engine
 from sqlalchemy.orm import Session
-import auth
-from auth import get_current_user
+import routers.auth as auth
+from routers.auth import get_current_user
 from database import engine, SessionLocal
 import models
 
