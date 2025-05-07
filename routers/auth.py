@@ -1,6 +1,6 @@
 from datetime import datetime, timedelta
 from typing import Annotated
-from fastapi import APIRouter, Depends, HTTPException
+from fastapi import APIRouter, Depends, HTTPException, Response, Request  # Import necessário para manipular cookies
 from pydantic import BaseModel
 from sqlalchemy.orm import Session
 from starlette import status
@@ -41,6 +41,7 @@ db_dependency = Annotated[Session, Depends(get_db)]
 @router.post("/", status_code=status.HTTP_201_CREATED)
 async def create_user(db: db_dependency,
                       create_user_request: CreateUserRequest):
+    
     create_user_model = Users(
         username=create_user_request.username,
         hashed_password=bcrypt_context.hash(create_user_request.password)
@@ -51,7 +52,8 @@ async def create_user(db: db_dependency,
 
 @router.post("/token", response_model=Token)
 async def login_for_access_token(form_data: Annotated[OAuth2PasswordRequestForm, Depends()],
-                                 db: db_dependency):
+                                 db: db_dependency,
+                                 response: Response):
     user = authenticate_user(form_data.username, form_data.password, db)
     if not user:
         raise HTTPException(
@@ -59,6 +61,15 @@ async def login_for_access_token(form_data: Annotated[OAuth2PasswordRequestForm,
             detail="Usuário ou senha inválidos.",
         )
     token = create_access_token(user.username, user.id, timedelta(minutes=20))
+
+    # Configura o token como um cookie
+    response.set_cookie(
+        key="access_token",
+        value=f"Bearer {token}",
+        httponly=True,
+        max_age=1200,
+        samesite="strict"
+    )
 
     return {"access_token": token, "token_type": "bearer"}
 
@@ -77,13 +88,19 @@ def create_access_token(username: str, user_id: int, expires_delta: timedelta | 
     encode.update({"exp": expires})
     return jwt.encode(encode, SECRET_KEY, algorithm=ALGORITHM)
 
-async def get_current_user(token: Annotated[str, Depends(oauth2_scheme)]):
+async def get_current_user(request: Request = None):
+    
     credentials_exception = HTTPException(
         status_code=status.HTTP_401_UNAUTHORIZED,
         detail="Credenciais inválidas."
     )
+
+    token = request.cookies.get("access_token")
+    if token is None:
+            raise credentials_exception
+
     try:
-        payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
+        payload = jwt.decode(token.replace("Bearer ", ""), SECRET_KEY, algorithms=[ALGORITHM])
         username: str = payload.get("sub")
         user_id: int = payload.get("id")
         if username is None or user_id is None:

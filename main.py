@@ -1,16 +1,14 @@
 from typing import Annotated
 from fastapi import Depends, FastAPI, HTTPException, status
-from sqlalchemy import create_engine
 from sqlalchemy.orm import Session
 import routers.auth as auth
+import routers.documents as documents
 from routers.auth import get_current_user
-from database import engine, SessionLocal
-import models
+from database import SessionLocal
 
 app = FastAPI()
 app.include_router(auth.router)
-
-models.Base.metadata.create_all(bind=engine)
+app.include_router(documents.router)
 
 def get_db():
     db = SessionLocal()
