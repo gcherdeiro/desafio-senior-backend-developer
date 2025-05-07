@@ -1,9 +1,9 @@
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
 from datetime import date
 
 class CreateUserRequest(BaseModel):
     username: str
-    password: str
+    password: str = Field(..., min_length=6, max_length=30, description="A senha deve ter entre 6 e 30 caracteres.")
 
 class Token(BaseModel):
     access_token: str
