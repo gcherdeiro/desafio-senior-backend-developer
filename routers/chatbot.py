@@ -24,7 +24,11 @@ def get_db():
 db_dependency = Annotated[Session, Depends(get_db)]
 user_dependency = Annotated[dict, Depends(get_current_user)]
 
-@router.post("/chatbot", status_code=status.HTTP_200_OK)
+@router.post(
+        "/",
+        summary="Chatbot",
+        description="Interage com o chatbot para obter informações sobre documentos e saldo de transporte.", 
+        status_code=status.HTTP_200_OK)
 async def chatbot(
     question: str,
     db: db_dependency,

@@ -22,7 +22,11 @@ def get_db():
 db_dependency = Annotated[Session, Depends(get_db)]
 user_dependency = Annotated[dict, Depends(get_current_user)]
 
-@router.get("/", status_code=status.HTTP_200_OK)
+@router.get(
+        "/", 
+        summary="Obter documentos", 
+        description="Retorna os documentos do usuário autenticado.",
+        status_code=status.HTTP_200_OK)
 async def get_documents(
     db: db_dependency,
     current_user: user_dependency
@@ -123,7 +127,11 @@ async def get_vaccination_card(db: db_dependency, current_user: user_dependency)
     
     return document.vaccination_card
 
-@router.post("/cpf", status_code=status.HTTP_201_CREATED)
+@router.post(
+        "/cpf", 
+        summary="Armazenar CPF",
+        description="Armazena o CPF do usuário autenticado.",
+        status_code=status.HTTP_201_CREATED)
 async def create_cpf(create_cpf_request: CreateCpfRequest,
                     db: db_dependency,
                     current_user: user_dependency):
@@ -159,7 +167,11 @@ async def create_cpf(create_cpf_request: CreateCpfRequest,
 
     return {"message": "CPF criado e associado aos documentos com sucesso."}
 
-@router.post("/rg", status_code=status.HTTP_201_CREATED)
+@router.post(
+        "/rg", 
+        summary="Armazenar RG",
+        description="Armazena o RG do usuário autenticado.",
+        status_code=status.HTTP_201_CREATED)
 async def create_rg(create_rg_request: CreateRgRequest,
                     db: db_dependency,
                     current_user: user_dependency):
@@ -195,7 +207,11 @@ async def create_rg(create_rg_request: CreateRgRequest,
 
     return {"message": "RG criado e associado aos documentos com sucesso."}
 
-@router.post("/cnh", status_code=status.HTTP_201_CREATED)
+@router.post(
+        "/cnh", 
+        summary="Armazenar CNH",
+        description="Armazena a CNH do usuário autenticado.",
+        status_code=status.HTTP_201_CREATED)
 async def create_cnh(create_cnh_request: CreateCnhRequest,
                     db: db_dependency,
                     current_user: user_dependency):
@@ -234,7 +250,11 @@ async def create_cnh(create_cnh_request: CreateCnhRequest,
 
     return {"message": "CNH criada e associada aos documentos com sucesso."}
 
-@router.post("/vaccination_card", status_code=status.HTTP_201_CREATED)
+@router.post(
+        "/vaccination_card", 
+        summary="Armazenar Carteira de Vacinação",
+        description="Armazena a carteira de vacinação do usuário autenticado.",
+        status_code=status.HTTP_201_CREATED)
 async def create_vaccination_card(create_vaccination_card_request: CreateVaccinationCardRequest,
                                    db: db_dependency,
                                    current_user: user_dependency):

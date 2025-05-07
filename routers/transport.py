@@ -24,7 +24,11 @@ def get_db():
 db_dependency = Annotated[Session, Depends(get_db)]
 user_dependency = Annotated[dict, Depends(get_current_user)]
 
-@router.get("/balance", status_code=status.HTTP_200_OK)
+@router.get(
+        "/balance", 
+        summary="Obter saldo de transporte",
+        description="Retorna o saldo de transporte do usuário autenticado.",
+        status_code=status.HTTP_200_OK)
 async def get_transport_balance(
     db: db_dependency,
     current_user: user_dependency
@@ -46,7 +50,11 @@ async def get_transport_balance(
     
     return {"message": "Saldo atual: R$ " + str(transport.balance)}
 
-@router.post("/add_balance", status_code=status.HTTP_201_CREATED)
+@router.post(
+        "/add_balance", 
+        summary="Adicionar saldo de transporte",
+        description="Adiciona um valor ao saldo de transporte do usuário autenticado.",
+        status_code=status.HTTP_201_CREATED)
 async def add_transport_balance(
     db: db_dependency,
     current_user: user_dependency,

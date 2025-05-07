@@ -32,7 +32,11 @@ def get_db():
 
 db_dependency = Annotated[Session, Depends(get_db)]
 
-@router.post("/", status_code=status.HTTP_201_CREATED)
+@router.post(
+        "/", 
+        summary="Criar usuário",
+        description="Cria um novo usuário com nome de usuário e senha.",
+        status_code=status.HTTP_201_CREATED)
 async def create_user(db: db_dependency,
                       create_user_request: CreateUserRequest):
     
@@ -44,7 +48,11 @@ async def create_user(db: db_dependency,
     db.add(create_user_model)
     db.commit()
 
-@router.post("/token", response_model=Token)
+@router.post(
+        "/token", 
+        summary="Login",
+        description="Realiza o login do usuário e retorna um token de acesso.",
+        response_model=Token)
 async def login_for_access_token(form_data: Annotated[OAuth2PasswordRequestForm, Depends()],
                                  db: db_dependency,
                                  response: Response):
