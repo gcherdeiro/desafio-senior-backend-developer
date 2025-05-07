@@ -51,6 +51,78 @@ async def get_documents(
         }
     }
 
+async def get_cpf(db: db_dependency, current_user: user_dependency):
+    if not current_user:
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Usuário não autenticado."
+        )
+
+    user_id = current_user.get("id")
+    document = db.query(Documents).filter(Documents.user_id == user_id).first()
+
+    if not document or not document.cpf:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="Nenhum CPF encontrado para o usuário."
+        )
+    
+    return document.cpf
+
+async def get_rg(db: db_dependency, current_user: user_dependency):
+    if not current_user:
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Usuário não autenticado."
+        )
+
+    user_id = current_user.get("id")
+    document = db.query(Documents).filter(Documents.user_id == user_id).first()
+
+    if not document or not document.rg:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="Nenhum RG encontrado para o usuário."
+        )
+    
+    return document.rg
+
+async def get_cnh(db: db_dependency, current_user: user_dependency):
+    if not current_user:
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Usuário não autenticado."
+        )
+
+    user_id = current_user.get("id")
+    document = db.query(Documents).filter(Documents.user_id == user_id).first()
+
+    if not document or not document.cnh:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="Nenhuma CNH encontrada para o usuário."
+        )
+    
+    return document.cnh
+
+async def get_vaccination_card(db: db_dependency, current_user: user_dependency):
+    if not current_user:
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Usuário não autenticado."
+        )
+
+    user_id = current_user.get("id")
+    document = db.query(Documents).filter(Documents.user_id == user_id).first()
+
+    if not document or not document.vaccination_card:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="Nenhuma carteira de vacinação encontrada para o usuário."
+        )
+    
+    return document.vaccination_card
+
 @router.post("/cpf", status_code=status.HTTP_201_CREATED)
 async def create_cpf(create_cpf_request: CreateCpfRequest,
                     db: db_dependency,
