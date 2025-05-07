@@ -10,6 +10,8 @@ from passlib.context import CryptContext
 from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
 from jose import JWTError, jwt
 
+from schemas import CreateUserRequest, Token
+
 router = APIRouter(
     prefix="/auth",
     tags=["auth"],
@@ -20,14 +22,6 @@ ALGORITHM = 'HS256'
 
 bcrypt_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="auth/token")
-
-class CreateUserRequest(BaseModel):
-    username: str
-    password: str
-
-class Token(BaseModel):
-    access_token: str
-    token_type: str
 
 def get_db():
     db = SessionLocal()

@@ -1,4 +1,4 @@
-from sqlalchemy import Column, Date, ForeignKey, Integer, String
+from sqlalchemy import DECIMAL, Column, Date, ForeignKey, Integer, String
 from sqlalchemy.orm import relationship
 from database import Base
 
@@ -10,6 +10,17 @@ class Users(Base):
     hashed_password = Column(String(255))
     
     documents = relationship("Documents", back_populates="user")
+    transport = relationship("Transport", back_populates="users")
+
+class Transport(Base):
+    __tablename__ = "transport"
+
+    id = Column(Integer, primary_key=True, index=True)
+    user_id = Column(Integer, ForeignKey("users.id"))
+    balance = Column(DECIMAL(10, 2))
+    last_transaction_date = Column(Date, nullable=True)
+
+    users = relationship("Users", back_populates="transport")
 
 class Cpf(Base):
     __tablename__ = "cpf"

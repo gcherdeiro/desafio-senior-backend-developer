@@ -1,14 +1,14 @@
 from typing import Annotated
 from fastapi import Depends, FastAPI, HTTPException, status
 from sqlalchemy.orm import Session
-import routers.auth as auth
-import routers.documents as documents
+from routers import transport, auth, documents
 from routers.auth import get_current_user
 from database import SessionLocal
 
 app = FastAPI()
 app.include_router(auth.router)
 app.include_router(documents.router)
+app.include_router(transport.router)
 
 def get_db():
     db = SessionLocal()
