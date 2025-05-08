@@ -1,5 +1,5 @@
 from typing import Annotated
-from fastapi import Depends, FastAPI, HTTPException, status
+from fastapi import Depends, FastAPI
 from sqlalchemy.orm import Session
 from routers import chatbot, health, transport, auth, documents
 from routers.auth import get_current_user

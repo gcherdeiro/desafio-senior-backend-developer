@@ -1,6 +1,5 @@
 from fastapi import APIRouter
 import httpx
-from sqlalchemy.orm import Session
 from database import SessionLocal
 from sqlalchemy import text
 from database import engine
