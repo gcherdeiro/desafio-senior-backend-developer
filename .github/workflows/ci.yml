@@ -46,7 +46,7 @@ jobs:
 
     - name: Wait for MySQL to be ready
       run: |
-        dockerize -wait tcp://db:3306 -timeout 60s
+        dockerize -wait tcp://db:3306 -timeout 120s
 
     - name: Run migrations
       run: |
