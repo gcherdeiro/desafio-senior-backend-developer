@@ -52,12 +52,12 @@ jobs:
 
     - name: Run migrations
       env:
-      DATABASE_URL: mysql+pymysql://root:testeSenhaInfinita@127.0.0.1:3306/carteira_digital
+        DATABASE_URL: mysql+pymysql://root:testeSenhaInfinita@127.0.0.1:3306/carteira_digital
       run: |
         alembic upgrade head
 
     - name: Run tests
       env:
-      DATABASE_URL: mysql+pymysql://root:testeSenhaInfinita@127.0.0.1:3306/carteira_digital
+        DATABASE_URL: mysql+pymysql://root:testeSenhaInfinita@127.0.0.1:3306/carteira_digital
       run: |
         pytest
