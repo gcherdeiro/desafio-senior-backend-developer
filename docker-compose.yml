@@ -1,0 +1,38 @@
+services:
+  app:
+    build: .
+    container_name: carteira_digital_app
+    ports:
+      - "8000:8000"
+    volumes:
+      - .:/app
+    environment:
+      - DATABASE_URL=mysql+pymysql://root:testeSenhaInfinita@db:3306/carteira_digital
+    depends_on:
+      - db
+    working_dir: /app
+    command: uvicorn main:app --host 0.0.0.0 --reload
+
+  db:
+    image: mysql:8.0
+    container_name: carteira_digital_db
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: testeSenhaInfinita
+      MYSQL_DATABASE: carteira_digital
+    ports:
+      - "3306:3306"
+    volumes:
+      - db_data:/var/lib/mysql
+      - ./init.sql:/docker-entrypoint-initdb.d/init.sql
+    command: >
+      --default-authentication-plugin=mysql_native_password
+      --init-file /docker-entrypoint-initdb.d/init.sql
+    options: >
+      --health-cmd="mysqladmin ping -h 127.0.0.1"
+      --health-interval=10s
+      --health-timeout=5s
+      --health-retries=3
+
+volumes:
+  db_data:
