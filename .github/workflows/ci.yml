@@ -52,6 +52,13 @@ jobs:
         run: |
           dockerize -wait tcp://127.0.0.1:3306 -timeout 180s
 
+      - name: Test MySQL connectivity
+        run: |
+          until mysqladmin ping -h 127.0.0.1 --silent; do
+            echo "Waiting for MySQL to be ready..."
+            sleep 5
+          done
+
       - name: Run migrations
         run: alembic upgrade head
         env:
