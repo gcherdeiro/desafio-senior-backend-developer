@@ -15,13 +15,13 @@ jobs:
     runs-on: ubuntu-latest
 
     services:
-      mysql:
+      db:
         image: mysql:8.0
-        ports:
-          - 3306:3306
         env:
           MYSQL_ROOT_PASSWORD: testeSenhaInfinita
           MYSQL_DATABASE: carteira_digital
+        ports:
+          - 3306:3306
         options: >-
           --health-cmd="mysqladmin ping -h 127.0.0.1"
           --health-interval=10s
@@ -52,11 +52,11 @@ jobs:
           done
 
       - name: Run migrations
+        run: alembic upgrade head
         env:
           DATABASE_URL: mysql+pymysql://root:testeSenhaInfinita@127.0.0.1:3306/carteira_digital
-        run: |
-          alembic upgrade head
 
       - name: Run tests
+        run: pytest
         env:
-          DATABASE_URL: mysql+pymysql://root:teste_
+          DATABASE_URL: mysql+pymysql://root:testeSenhaInfinita@127.0.0.1:3306/carteira_digital
