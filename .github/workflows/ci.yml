@@ -61,6 +61,8 @@ jobs:
 
       - name: Generate Alembic revision
         run: alembic revision --autogenerate -m "Apply migrations"
+        env:
+          DATABASE_URL: mysql+pymysql://root:testeSenhaInfinita@127.0.0.1:3306/carteira_digital
 
       - name: Run migrations
         run: alembic upgrade head
