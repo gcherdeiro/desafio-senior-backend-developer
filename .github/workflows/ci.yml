@@ -59,6 +59,9 @@ jobs:
             sleep 5
           done
 
+      - name: Generate Alembic revision
+        run: alembic revision --autogenerate -m "Apply migrations"
+
       - name: Run migrations
         run: alembic upgrade head
         env:
